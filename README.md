@@ -1,22 +1,20 @@
 # 🔥 Forest Fire Weather Index (FWI) Predictor
 
-A machine learning web application that predicts the **Fire Weather Index (FWI)** for Algerian forest regions using a **Ridge Regression** model, served through a **Flask** REST API with a modern dark-themed UI.
-
 ---
 
-## 📸 Preview
+## 🌐 Live Demo
 
-> Enter environmental parameters (temperature, humidity, wind speed, etc.) and get an instant FWI score with risk level classification — **Low / Moderate / High / Extreme**.
+> 🔗 **[https://forestfire-hhdtd2d4f3dbdnf5.centralindia-01.azurewebsites.net/predictdata](https://forestfire-hhdtd2d4f3dbdnf5.centralindia-01.azurewebsites.net/predictdata)**
 
 ---
 
 ## ✨ Features
 
 - 🔮 **ML-Powered Prediction** — Ridge Regression model trained on the Algerian Forest Fires dataset
-- 🌡️ **Multi-Parameter Input** — Weather + FWI index inputs (Temperature, RH, Wind Speed, Rain, FFMC, DMC, ISI)
-- 🎨 **Premium Dark UI** — Glassmorphism card, animated ember particles, fire gradient theme
+- 🌡️ **9-Parameter Input** — Temperature, Humidity, Wind Speed, Rain, FFMC, DMC, ISI, Class, Region
 - 📊 **Risk Classification** — Color-coded risk level (🟢 Low / 🟡 Moderate / 🟠 High / 🔴 Extreme)
-- ⚡ **Fast Flask API** — Lightweight REST endpoint for prediction
+- 🎨 **Premium Dark UI** — Glassmorphism card, animated ember particles, fire gradient theme
+- ☁️ **Azure Deployed** — Hosted on Microsoft Azure App Service with Gunicorn WSGI server
 - 📱 **Responsive Design** — Works on desktop and mobile
 
 ---
@@ -30,7 +28,8 @@ A machine learning web application that predicts the **Fire Weather Index (FWI)*
 | **Preprocessing** | StandardScaler (scikit-learn) |
 | **Frontend** | HTML5, Vanilla CSS, Jinja2 |
 | **Font** | Google Fonts — Outfit |
-| **Deployment** | Gunicorn (production WSGI) |
+| **WSGI Server** | Gunicorn |
+| **Cloud Platform** | Microsoft Azure App Service |
 
 ---
 
@@ -39,70 +38,89 @@ A machine learning web application that predicts the **Fire Weather Index (FWI)*
 ```
 Forest Fire/
 │
-├── application.py                          # Flask app — routes & prediction logic
-├── requirements.txt                        # Python dependencies
-├── README.md                               # Project documentation
+├── application.py                                    # Flask app — routes & prediction logic
+├── requirements.txt                                  # Python dependencies
+├── README.md                                         # Project documentation
 │
 ├── templates/
-│   ├── home.html                           # Prediction form UI (main page)
-│   └── index.html                          # Legacy landing page
+│   ├── home.html                                     # Prediction form UI (main page)
+│   └── index.html                                    # Legacy landing page
 │
 ├── models/
-│   ├── ridge.pkl                           # Trained Ridge Regression model
-│   └── scaler.pkl                          # Fitted StandardScaler
+│   ├── ridge.pkl                                     # Trained Ridge Regression model
+│   └── scaler.pkl                                    # Fitted StandardScaler
 │
 ├── dataset/
-│   └── Algerian_forest_fires_cleaned_dataset.csv   # Cleaned training dataset
+│   └── Algerian_forest_fires_cleaned_dataset.csv     # Cleaned training dataset
 │
 └── notebooks/
-    ├── 2.0-EDA And FE Algerian Forest Fires.ipynb  # Exploratory Data Analysis
-    └── 3.0-Model Training.ipynb                    # Model training & evaluation
+    ├── 2.0-EDA And FE Algerian Forest Fires.ipynb    # Exploratory Data Analysis & Feature Engineering
+    └── 3.0-Model Training.ipynb                      # Model training & evaluation
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Run Locally
 
 ### Prerequisites
 
 - Python 3.8+
 - pip
 
-### 1. Clone the repository
+### Steps
 
 ```bash
-git clone https://github.com/your-username/forest-fire-fwi-predictor.git
-cd forest-fire-fwi-predictor
-```
+# 1. Clone the repository
+git clone https://github.com/sanjeev-kumar-patel/Forest-Fire.git
+cd Forest-Fire
 
-### 2. Create a virtual environment (recommended)
-
-```bash
+# 2. Create a virtual environment
 python -m venv venv
 
 # Windows
 venv\Scripts\activate
-
 # macOS/Linux
 source venv/bin/activate
-```
 
-### 3. Install dependencies
-
-```bash
+# 3. Install dependencies
 pip install -r requirements.txt
-```
 
-### 4. Run the application
-
-```bash
+# 4. Start the app
 python application.py
 ```
 
-### 5. Open in browser
+Then open **http://127.0.0.1:5000** in your browser.
+
+---
+
+## ☁️ Azure Deployment
+
+This app is deployed on **Microsoft Azure App Service**.
+
+### Deployment Steps Used
+
+1. Created an **Azure App Service** (Linux, Python 3.x runtime)
+2. Configured the startup command:
+   ```
+   gunicorn --bind=0.0.0.0 --timeout 600 application:app
+   ```
+3. Deployed via:
+   > **⚠️ Add how you deployed** — Choose whichever applies:
+   > - `GitHub Actions (CI/CD)`
+   > - `Azure CLI (az webapp up)`
+   > - `VS Code Azure Extension`
+   > - `ZIP deploy via Azure Portal`
+
+4. Set **environment variables** in App Service Configuration (if any):
+   > **⚠️ Add any environment variables you configured in Azure Portal here**, e.g.:
+   > ```
+   > SCM_DO_BUILD_DURING_DEPLOYMENT = true
+   > ```
+
+### Live URL
 
 ```
-http://127.0.0.1:5000
+https://forestfire-hhdtd2d4f3dbdnf5.centralindia-01.azurewebsites.net/predictdata
 ```
 
 ---
@@ -115,23 +133,23 @@ Returns the FWI prediction form (home page).
 ---
 
 ### `POST /predictdata`
-Submits input parameters and returns the predicted FWI score.
+Submits parameters and returns the predicted FWI score.
 
 **Form Parameters:**
 
 | Parameter | Type | Description | Example |
 |---|---|---|---|
-| `Temperature` | float | Air temperature in °C | `29` |
+| `Temperature` | float | Air temperature (°C) | `29` |
 | `RH` | float | Relative Humidity (%) | `57` |
-| `Ws` | float | Wind speed in km/h | `18` |
-| `Rain` | float | Daily rainfall in mm | `0` |
+| `Ws` | float | Wind speed (km/h) | `18` |
+| `Rain` | float | Daily rainfall (mm) | `0` |
 | `FFMC` | float | Fine Fuel Moisture Code | `85.9` |
 | `DMC` | float | Duff Moisture Code | `26.2` |
 | `ISI` | float | Initial Spread Index | `6.5` |
 | `Classes` | int | Fire class (0 = Low, 1 = High) | `0` |
 | `Region` | int | Region (0 = Bejaia, 1 = Sidi-Bel Abbès) | `0` |
 
-**Response:** Renders `home.html` with the predicted FWI value and risk level.
+**Response:** Renders the prediction page with FWI score and risk classification.
 
 ---
 
@@ -139,13 +157,11 @@ Submits input parameters and returns the predicted FWI score.
 
 **Algerian Forest Fires Dataset**
 
-- **Source:** UCI Machine Learning Repository
+- **Source:** [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Algerian+Forest+Fires+Dataset++)
 - **Regions:** Bejaia (northeast Algeria) & Sidi-Bel-Abbès (northwest Algeria)
 - **Period:** June 2012 – September 2012
 - **Instances:** 244 (122 per region)
 - **Target Variable:** FWI (Fire Weather Index)
-
-The dataset contains meteorological data and FWI system components observed daily over the summer fire season.
 
 ---
 
@@ -157,8 +173,6 @@ The dataset contains meteorological data and FWI system components observed dail
 | **Preprocessing** | StandardScaler (zero mean, unit variance) |
 | **Serialization** | Python `pickle` |
 | **Training Notebook** | `notebooks/3.0-Model Training.ipynb` |
-
-The model was selected after comparing multiple regression algorithms. Ridge regularization was applied to handle multicollinearity among the FWI system features.
 
 ---
 
@@ -185,26 +199,14 @@ gunicorn
 
 ---
 
-## 🤝 Contributing
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
 ## 👤 Author
 
 **Sanjeev Kumar Patel**
 
+> **⚠️ Optionally add your links:**
+> - GitHub: [github.com/sanjeev-kumar-patel](https://github.com/sanjeev-kumar-patel)
+> - LinkedIn: `https://linkedin.com/in/your-profile`
+
 ---
 
-> Built as part of an AIML course project — demonstrating end-to-end ML model deployment with Flask.
+> Built as part of an AIML course project — demonstrating end-to-end ML model deployment on Microsoft Azure.
